@@ -1,0 +1,4 @@
+database.ts
+.env
+node_modules/
+dist/
