@@ -2,13 +2,26 @@ import express from "express";
 import { Request, Response } from "express";
 import { AppDataSource } from "../config/data-source"; // Assurez-vous que AppDataSource est correctement importé
 import { User } from "../models/User";
+import { Role, Admin, Moderator, RegularUser } from "../models/Role";
 
 const router = express.Router();
 
+// Fonction pour transformer une string en instance de classe Role
+function getRoleInstance(role: string): Role {
+    switch (role) {
+        case "Admin":
+            return new Admin();
+        case "Modérateur":
+            return new Moderator();
+        default:
+            return new RegularUser(); // Rôle "User" par défaut
+    }
+}
+
 router.post("/register", async (req: Request, res: Response): Promise<void> => {
     try {
-        const { username, password, role } = req.body;
-        if (!username || !password || !role) {
+        const { username, password, role = "User" } = req.body;
+        if (!username || !password ) {
             res.status(400).json({ message: "Tous les champs sont requis" });
             return;
         }
